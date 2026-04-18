@@ -1,19 +1,19 @@
 // 用户相关模块管理
 import { createSlice } from "@reduxjs/toolkit";
-import { request } from "@/utils";
+import { request, setToken as _setToken, getToken } from "@/utils";
 
 const userStore = createSlice({
     name:'user',
     initialState: {
         // token持久化
-        token: localStorage.getItem('token_key') ? localStorage.getItem('token_key') : ''
+        token: getToken() || ''
     },
     //同步修改方法
     reducers: {
         setToken( state, action) {
             state.token = action.payload
             // locatStory存一份 ( token持久化 )
-            localStorage.setItem('token_key',action.payload)
+            _setToken(action.payload)
         }
     }
 })
