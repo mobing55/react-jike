@@ -5,12 +5,15 @@ import { request } from "@/utils";
 const userStore = createSlice({
     name:'user',
     initialState: {
-        token:''
+        // token持久化
+        token: localStorage.getItem('token_key') ? localStorage.getItem('token_key') : ''
     },
     //同步修改方法
     reducers: {
         setToken( state, action) {
             state.token = action.payload
+            // locatStory存一份 ( token持久化 )
+            localStorage.setItem('token_key',action.payload)
         }
     }
 })
