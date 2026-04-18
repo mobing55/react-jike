@@ -1,6 +1,6 @@
 // 用户相关模块管理
 import { createSlice } from "@reduxjs/toolkit";
-import { request, setToken as _setToken, getToken } from "@/utils";
+import { request, setToken as _setToken, getToken, removeToken } from "@/utils";
 
 const userStore = createSlice({
     name:'user',
@@ -18,12 +18,17 @@ const userStore = createSlice({
         },
         setuserInfo(state, action) {
             state.userInfo = action.payload
+        },
+        clearUserInfo(state) {
+            state.token = ''
+            state.userInfo = {}
+            removeToken()
         }
     }
 })
 
 //解构actionCreate
-const { setToken, setuserInfo } =  userStore.actions
+const { setToken, setuserInfo, clearUserInfo } =  userStore.actions
 
 //获取reducer函数
 const userReducer = userStore.reducer
@@ -48,6 +53,6 @@ const fetchUserInfo = () => {
 }
 
 
-export { fetchLogin, fetchUserInfo, setToken }
+export { fetchLogin, fetchUserInfo, clearUserInfo }
 
 export default userReducer
