@@ -34,7 +34,7 @@ const Article = () => {
         {
         title: '状态',
         dataIndex: 'status',
-        render: data => <Tag color="green">审核通过</Tag>
+        render: data => data ===1 ? <Tag color='warning'>待审核</Tag> : <Tag color='success'>审核通过</Tag>
         },
         {
         title: '发布时间',
