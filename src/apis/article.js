@@ -1,5 +1,6 @@
 // 封装和文章相关的接口函数
 import { request } from "@/utils";
+import Title from "antd/es/skeleton/Title";
 
 // 获取频道列表
 export function getChannelAPI() {
@@ -8,3 +9,12 @@ export function getChannelAPI() {
         method: 'GET'
     })
 } 
+
+// 提交文章表单
+export function createArticleAPI(data) {
+    return request({
+        url:'/mp/articles?draft',
+        method: 'POST',
+        data: data
+    })
+}
