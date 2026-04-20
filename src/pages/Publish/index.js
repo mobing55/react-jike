@@ -17,9 +17,8 @@ import './index.scss'
 import ReactQuill from 'react-quill-new'
 import 'react-quill-new/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
-import { createArticleAPI, getArticleById } from '@/apis/article'
+import { createArticleAPI, getArticleById, updateArticleAPI } from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
-import { type } from '@testing-library/user-event/dist/type'
 
 const { Option } = Select
 
@@ -39,12 +38,25 @@ const Publish = () => {
       content,
       cover: {
         type: imageType,
-        images: imageList.map(item => item.response.data.url)
+        images: imageList.map(item => {
+          if(item.response){
+            return item.response.data.url
+          }else{
+            return item.url
+          }
+        })
       },
       channel_id
     }
     // 调用接口提交
-    createArticleAPI(reqData)
+    // 处理掉用不同的接口 新增/编辑 用id判断
+    if(articleId){
+      //更新接口
+      updateArticleAPI({...reqData, id:articleId})
+    }else{
+      //新增接口
+      createArticleAPI(reqData)
+    }
   }
 
   // 上传图片回调
@@ -76,7 +88,6 @@ const Publish = () => {
         ...data,
         type: cover.type
       })
-
       // 封面回填
       setImageType(cover.type)
       // 显示图片
