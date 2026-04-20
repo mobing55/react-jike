@@ -19,6 +19,7 @@ import 'react-quill-new/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
 import { createArticleAPI, getArticleById } from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
+import { type } from '@testing-library/user-event/dist/type'
 
 const { Option } = Select
 
@@ -69,7 +70,19 @@ const Publish = () => {
     // 1.通过id获取数据
     async function getArticleDetail() {
       const res = await getArticleById(articleId)
-      form.setFieldsValue(res.data)
+      const data = res.data
+      const { cover } = data
+      form.setFieldsValue({
+        ...data,
+        type: cover.type
+      })
+
+      // 封面回填
+      setImageType(cover.type)
+      // 显示图片
+      setImageList(cover.images.map(url => {
+        return { url }
+      }))
     }
     getArticleDetail()
     // 2.调用实例方法 完成回填
@@ -124,6 +137,7 @@ const Publish = () => {
               name='image'
               onChange={onChange}
               maxCount={imageType}
+              fileList={imageList}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
