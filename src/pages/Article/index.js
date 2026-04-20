@@ -85,17 +85,40 @@ const Article = () => {
         }
     ]
 
-    // 获取文章列表
+    // 筛选功能
+    // 1.准备参数
+    const [reqData, setReqData] = useState({
+        status: '',
+        channel_id: '',
+        begin_pubdate: '',
+        end_pubdate: '',
+        page: 1,
+        per_page: 4
+    })
+
+    // 获取文章列表(// 4.重新拉取文章列表 + 渲染table列表)
     const [list, setList] = useState([])
     const [count, setCount] = useState(0)
     useEffect(() => {
         async function getList() {
-            const res = await getArticleAPI()
+            const res = await getArticleAPI(reqData)
             setList(res.data.results)
             setCount(res.data.total_count)
         }
         getList()
-    },[])
+    },[reqData])
+
+    // 2.获取当前筛选数据
+    const onFinish = (formValue) => {
+        // 3.表单收集数据放入参数中
+        setReqData({
+            ...reqData,
+            channel_id: formValue.channel_id,
+            status: formValue.status,
+            begin_pubdate: formValue.date[0].format('YYYY-MM-DD'),
+            end_pubdate: formValue.date[1].format('YYYY-MM-DD')
+        })
+    }
 
     return (
         <div>
@@ -108,11 +131,11 @@ const Article = () => {
             }
             style={{ marginBottom: 20 }}
         >
-            <Form initialValues={{ status: '' }}>
+            <Form initialValues={{ status: '' }} onFinish={onFinish}>
             <Form.Item label="状态" name="status">
                 <Radio.Group>
                 <Radio value={''}>全部</Radio>
-                <Radio value={0}>草稿</Radio>
+                <Radio value={0}>待审核</Radio>
                 <Radio value={2}>审核通过</Radio>
                 </Radio.Group>
             </Form.Item>
